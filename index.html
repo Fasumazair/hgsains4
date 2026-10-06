@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matriks Pembelajaran Matematik Tahun 4 - Misi Superhero</title>
+  <!-- Google Fonts: Fredoka & Poppins for playful modern cartoon adventure look -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            heroBlue: {
+              DEFAULT: '#0284c7',
+              dark: '#0369a1',
+              light: '#38bdf8'
+            },
+            heroYellow: {
+              DEFAULT: '#facc15',
+              dark: '#eab308',
+              light: '#fef08a'
+            },
+            heroRed: {
+              DEFAULT: '#ef4444',
+              dark: '#dc2626',
+              light: '#f87171'
+            },
+            heroOrange: {
+              DEFAULT: '#f97316',
+              dark: '#ea580c',
+              light: '#fb923c'
+            },
+            heroGreen: {
+              DEFAULT: '#10b981',
+              dark: '#059669',
+              light: '#34d399'
+            }
+          },
+          fontFamily: {
+            comic: ['Fredoka', 'sans-serif'],
+            body: ['Poppins', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      user-select: none;
+    }
+    .font-comic {
+      font-family: 'Fredoka', cursive, sans-serif;
+    }
+    .hero-shadow {
+      box-shadow: 0 10px 0px 0px rgba(0, 0, 0, 0.15), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    .hero-btn-blue {
+      box-shadow: 0 6px 0px 0px #0369a1;
+      transition: all 0.15s ease-in-out;
+    }
+    .hero-btn-blue:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0px 0px #0369a1;
+    }
+    .hero-btn-orange {
+      box-shadow: 0 6px 0px 0px #c2410c;
+      transition: all 0.15s ease-in-out;
+    }
+    .hero-btn-orange:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0px 0px #c2410c;
+    }
+    .hero-btn-green {
+      box-shadow: 0 6px 0px 0px #047857;
+      transition: all 0.15s ease-in-out;
+    }
+    .hero-btn-green:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0px 0px #047857;
+    }
+    .hero-btn-yellow {
+      box-shadow: 0 6px 0px 0px #ca8a04;
+      transition: all 0.15s ease-in-out;
+    }
+    .hero-btn-yellow:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0px 0px #ca8a04;
+    }
+    @keyframes floatHero {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(1deg); }
+    }
+    .animate-float {
+      animation: floatHero 3s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 10px rgba(250, 204, 21, 0.8)); }
+      50% { filter: drop-shadow(0 0 25px rgba(249, 115, 22, 1)); }
+    }
+    .glow-effect {
+      animation: pulseGlow 2s infinite;
+    }
+    /* Star confetti canvas */
+    #confettiCanvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-sky-400 via-blue-500 to-indigo-700 min-h-screen text-slate-800 flex flex-col justify-between relative overflow-x-hidden">
+  <canvas id="confettiCanvas"></canvas>
+
+  <header class="w-full bg-white/95 backdrop-blur shadow-md border-b-4 border-yellow-400 py-3 px-4 sm:px-8 z-30 sticky top-0">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-11 h-11 bg-gradient-to-tr from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center text-2xl shadow-md border-2 border-white">
+          ⚡
+        </div>
+        <div>
+          <h1 class="font-comic text-xl sm:text-2xl font-bold tracking-wide text-sky-900 leading-tight">
+            MATEMATIK TAHUN 4
+          </h1>
+          <p class="text-xs sm:text-sm font-semibold text-orange-600 flex items-center gap-1">
+            <span>🚀 MISI MATEMATIK BERSAMA BOBOIBOY</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- User Active Badge in Header -->
+      <div id="headerUserBadge" class="hidden items-center gap-2 bg-sky-50 border-2 border-sky-300 rounded-full px-4 py-1.5 shadow-sm">
+        <span class="text-lg">🦸</span>
+        <div class="text-left text-xs sm:text-sm">
+          <p class="font-bold text-sky-900 leading-tight" id="headerNamaDisplay">Nama Murid</p>
+          <p class="font-semibold text-orange-600" id="headerKelasDisplay">4 MAJU</p>
+        </div>
+        <!-- BUTANG HOME DI HEADER -->
+        <button onclick="kembaliKeDashboard()" title="Ke Halaman Utama" class="ml-2 text-xs bg-yellow-400 hover:bg-yellow-500 text-sky-950 px-2.5 py-1 rounded-lg font-comic font-black transition flex items-center gap-1 shadow-sm">
+          <span>🏠</span> Home
+        </button>
+        <button onclick="keluarSesi()" title="Tukar Murid" class="ml-1 text-xs bg-red-100 hover:bg-red-200 text-red-700 px-2 py-1 rounded-lg font-bold transition">
+          Tukar
+        </button>
+      </div>
+
+      <!-- Sound toggle button -->
+      <button id="soundToggleBtn" onclick="toggleAudio()" class="p-2 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 border border-amber-300 transition shadow-sm text-sm font-bold flex items-center gap-1" title="Bunyi Interaktif">
+        <span id="soundIcon">🔊</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: REGISTRATION / MAKLUMAT MURID GATE -->
+    <!-- ========================================== -->
+    <section id="viewLogin" class="max-w-2xl mx-auto w-full transition-all duration-300">
+      <div class="bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-10 border-4 border-yellow-400 hero-shadow relative">
+        <!-- Floating Superhero Element Badges -->
+        <div class="flex justify-center -mt-16 mb-4">
+          <div class="w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-tr from-yellow-400 via-orange-500 to-red-500 rounded-3xl p-1 shadow-2xl animate-float border-4 border-white flex items-center justify-center">
+            <span class="text-5xl sm:text-6xl glow-effect">⚡</span>
+          </div>
+        </div>
+
+        <div class="text-center mb-6">
+          <span class="inline-block bg-orange-100 text-orange-700 text-xs sm:text-sm font-black px-4 py-1 rounded-full uppercase tracking-wider mb-2 border border-orange-300">
+            DASHBOARD MAKLUMAT MURID
+          </span>
+          <h2 class="font-comic text-2xl sm:text-4xl font-extrabold text-sky-950">
+            🧮 MATRIKS PEMBELAJARAN MATEMATIK TAHUN 4
+          </h2>
+          <p class="font-comic text-lg sm:text-xl font-bold text-orange-500 mt-1">
+            🚀 MISI MATEMATIK BERSAMA BOBOIBOY
+          </p>
+          <p class="text-slate-600 text-sm mt-2 max-w-md mx-auto">
+            Sila masukkan nama dan pilih kelas anda sebelum mengaktifkan jam kuasa Matematik!
+          </p>
+        </div>
+
+        <div class="space-y-6">
+          <!-- Bahagian 1: NAMA MURID -->
+          <div class="bg-sky-50/80 p-4 sm:p-5 rounded-2xl border-2 border-sky-200">
+            <label for="inputNamaMurid" class="block font-comic text-lg font-bold text-sky-900 mb-2 flex items-center gap-2">
+              <span class="text-2xl">👤</span> Nama Murid <span class="text-red-500 text-base">*</span>
+            </label>
+            <input 
+              type="text" 
+              id="inputNamaMurid" 
+              placeholder="Taip nama penuh anda..." 
+              maxlength="40"
+              class="w-full px-5 py-4 text-base sm:text-lg font-semibold bg-white border-2 border-sky-300 rounded-2xl focus:outline-none focus:ring-4 focus:ring-yellow-400/50 focus:border-yellow-500 transition shadow-inner placeholder-slate-400"
+              onkeypress="if(event.key === 'Enter') handleMulaPembelajaran()"
+            />
+            <p id="errorNama" class="hidden text-red-600 font-bold text-xs sm:text-sm mt-2 flex items-center gap-1">
+              ⚠️ Sila taip nama penuh anda terlebih dahulu!
+            </p>
+          </div>
+
+          <!-- Bahagian 2: PILIH KELAS -->
+          <div class="bg-amber-50/80 p-4 sm:p-5 rounded-2xl border-2 border-amber-200">
+            <p class="font-comic text-lg font-bold text-amber-950 mb-3 flex items-center gap-2">
+              <span class="text-2xl">🏫</span> Pilih Kelas <span class="text-red-500 text-base">*</span>
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- 4 MAJU BUTTON -->
+              <button 
+                type="button" 
+                id="btnKelasMaju" 
+                onclick="pilihKelas('4 MAJU')"
+                class="group relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl font-comic text-xl font-bold border-4 border-blue-400 bg-white text-blue-800 hover:bg-blue-50 transition transform hover:-translate-y-1 active:translate-y-0 cursor-pointer shadow-md"
+              >
+                <span class="text-3xl">🟦</span>
+                <span>4 MAJU</span>
+                <span id="badgeMaju" class="hidden absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-sans">Dipilih</span>
+              </button>
+
+              <!-- 4 USAHA BUTTON -->
+              <button 
+                type="button" 
+                id="btnKelasUsaha" 
+                onclick="pilihKelas('4 USAHA')"
+                class="group relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl font-comic text-xl font-bold border-4 border-emerald-400 bg-white text-emerald-800 hover:bg-emerald-50 transition transform hover:-translate-y-1 active:translate-y-0 cursor-pointer shadow-md"
+              >
+                <span class="text-3xl">🟩</span>
+                <span>4 USAHA</span>
+                <span id="badgeUsaha" class="hidden absolute top-2 right-2 bg-emerald-600 text-white text-xs px-2 py-0.5 rounded-full font-sans">Dipilih</span>
+              </button>
+            </div>
+            <p id="errorKelas" class="hidden text-red-600 font-bold text-xs sm:text-sm mt-2 flex items-center gap-1">
+              ⚠️ Sila pilih salah satu kelas di atas (4 MAJU atau 4 USAHA)!
+            </p>
+          </div>
+
+          <!-- BUTANG: MULA PEMBELAJARAN -->
+          <div class="pt-2">
+            <button 
+              type="button" 
+              onclick="handleMulaPembelajaran()"
+              class="w-full py-4 sm:py-5 px-6 rounded-2xl font-comic text-xl sm:text-2xl font-extrabold text-white bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 hero-btn-orange transition cursor-pointer flex items-center justify-center gap-3 tracking-wide"
+            >
+              <span>🚀</span>
+              <span>MULA PEMBELAJARAN</span>
+              <span>⚡</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Superhero Power Elements Footer Graphic -->
+        <div class="mt-8 pt-4 border-t border-slate-200 flex items-center justify-center gap-4 text-xs font-semibold text-slate-500 flex-wrap">
+          <span class="inline-flex items-center gap-1 bg-sky-100 text-sky-800 px-3 py-1 rounded-full">⚡ Kuasa Petir</span>
+          <span class="inline-flex items-center gap-1 bg-amber-100 text-amber-800 px-3 py-1 rounded-full">🌪️ Kuasa Angin</span>
+          <span class="inline-flex items-center gap-1 bg-red-100 text-red-800 px-3 py-1 rounded-full">🔥 Kuasa Api</span>
+          <span class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">🌱 Kuasa Daun</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 2: DASHBOARD UTAMA MATEMATIK TAHUN 4  -->
+    <!-- ========================================== -->
+    <section id="viewDashboard" class="hidden space-y-6 transition-all duration-300">
+      
+      <!-- Top Hero Welcome Banner -->
+      <div class="bg-gradient-to-r from-sky-600 via-blue-600 to-indigo-800 rounded-3xl p-6 sm:p-8 text-white hero-shadow border-4 border-yellow-300 relative overflow-hidden">
+        <!-- Background graphic accents -->
+        <div class="absolute -right-8 -top-8 w-44 h-44 bg-yellow-400/20 rounded-full blur-xl pointer-events-none"></div>
+        <div class="absolute right-12 bottom-0 text-7xl sm:text-8xl opacity-20 pointer-events-none select-none font-black">
+          🧮
+        </div>
+
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div class="space-y-2">
+            <div class="inline-flex items-center gap-2 bg-yellow-400 text-slate-900 text-xs sm:text-sm font-black px-3.5 py-1 rounded-full uppercase tracking-wider shadow">
+              <span>⚡ MATRIKS MATEMATIK TAHUN 4</span>
+            </div>
+            
+            <h2 class="font-comic text-2xl sm:text-4xl font-extrabold leading-tight text-white drop-shadow-sm">
+              Selamat datang, <span id="dashNamaGreeting" class="text-yellow-300 underline decoration-wavy decoration-orange-400">MURID</span>!
+            </h2>
+            <p class="font-comic text-lg sm:text-xl font-bold text-amber-200">
+              “Bersedia untuk menjadi SUPERHERO MATEMATIK?”
+            </p>
+          </div>
+
+          <!-- Student Profile Summary Card -->
+          <div class="bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row md:flex-col gap-3 min-w-[260px]">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-xl bg-yellow-400 text-sky-950 flex items-center justify-center text-2xl font-black shadow">
+                🦸
+              </div>
+              <div>
+                <p class="text-xs text-sky-200 font-semibold">Nama Murid:</p>
+                <p id="dashNamaText" class="font-comic text-lg font-bold text-white truncate max-w-[180px]">Nama</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-white/20">
+              <span class="text-xs text-sky-200 font-semibold">🏫 Kelas:</span>
+              <span id="dashKelasBadge" class="bg-yellow-400 text-sky-950 px-3 py-0.5 rounded-full font-comic font-black text-sm shadow">
+                4 MAJU
+              </span>
+            </div>
+            <div class="flex items-center justify-between text-xs text-amber-200 font-bold">
+              <span>⭐ Bintang Terkumpul:</span>
+              <span id="dashBintangCounter" class="text-base text-yellow-300">0 ⭐</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        
+        <!-- KAD 1: 📚 NOTA PEMBELAJARAN -->
+        <div onclick="bukaNota()" class="group bg-white rounded-3xl p-6 border-4 border-sky-300 hover:border-yellow-400 transition-all duration-200 transform hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-2xl flex flex-col justify-between">
+          <div>
+            <div class="w-16 h-16 rounded-2xl bg-sky-100 group-hover:bg-sky-200 text-sky-700 flex items-center justify-center text-3xl mb-4 transition border-2 border-sky-300">
+              📚
+            </div>
+            <span class="text-xs font-black uppercase text-sky-600 bg-sky-50 px-3 py-1 rounded-full border border-sky-200">Modul Ulangkaji</span>
+            <h3 class="font-comic text-2xl font-bold text-slate-800 mt-2">NOTA PEMBELAJARAN</h3>
+            <p class="text-slate-600 text-sm mt-1">
+              Kuasai topik Tahun 4: Nombor hingga 100,000, Operasi Asas, Pecahan, Perpuluhan, Wang & Ukuran.
+            </p>
+          </div>
+          <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-100">
+            <span class="text-sky-600 font-bold text-sm">Buka Nota Kuasa</span>
+            <span class="w-8 h-8 rounded-full bg-sky-500 text-white flex items-center justify-center text-sm font-bold group-hover:translate-x-1 transition">➔</span>
+          </div>
+        </div>
+
+        <!-- KAD 2: 📝 LATIHAN -->
+        <div onclick="bukaLatihan()" class="group bg-white rounded-3xl p-6 border-4 border-emerald-300 hover:border-yellow-400 transition-all duration-200 transform hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-2xl flex flex-col justify-between">
+          <div>
+            <div class="w-16 h-16 rounded-2xl bg-emerald-100 group-hover:bg-emerald-200 text-emerald-700 flex items-center justify-center text-3xl mb-4 transition border-2 border-emerald-300">
+              📝
+            </div>
+            <span class="text-xs font-black uppercase text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">Latih Tubi Pantas</span>
+            <h3 class="font-comic text-2xl font-bold text-slate-800 mt-2">LATIHAN</h3>
+            <p class="text-slate-600 text-sm mt-1">
+              Uji ketajaman minda dengan soalan latihan berserta panduan langkah demi langkah tanpa had masa.
+            </p>
+          </div>
+          <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-100">
+            <span class="text-emerald-600 font-bold text-sm">Mula Latihan</span>
+            <span class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center text-sm font-bold group-hover:translate-x-1 transition">➔</span>
+          </div>
+        </div>
+
+        <!-- KAD 3: 🎯 MISI 20 SOALAN -->
+        <div onclick="mulaMisi20Soalan()" class="group bg-gradient-to-br from-amber-50 to-orange-100 rounded-3xl p-6 border-4 border-orange-400 hover:border-red-500 transition-all duration-200 transform hover:-translate-y-2 cursor-pointer shadow-xl hover:shadow-2xl flex flex-col justify-between relative overflow-hidden">
+          <div class="absolute -right-3 -bottom-3 text-7xl opacity-15 select-none font-bold">🎯</div>
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div class="w-16 h-16 rounded-2xl bg-orange-500 text-white flex items-center justify-center text-3xl transition shadow-md border-2 border-white">
+                🎯
+              </div>
+              <span class="bg-red-500 text-white text-xs font-black px-3 py-1 rounded-full animate-pulse shadow">
+                CABARAN UTAMA
+              </span>
+            </div>
+            <span class="text-xs font-black uppercase text-orange-700 bg-orange-200 px-3 py-1 rounded-full border border-orange-300">Ujian Sebenar</span>
+            <h3 class="font-comic text-2xl font-bold text-orange-950 mt-2">MISI 20 SOALAN</h3>
+            <p class="text-slate-700 text-sm mt-1">
+              Selesaikan 20 soalan KSSR Matematik Tahun 4 untuk menentukan tahap gelaran Superhero anda!
+            </p>
+          </div>
+          <div class="mt-6 flex items-center justify-between pt-4 border-t border-orange-200">
+            <span class="text-orange-700 font-black text-sm">Gempur Misi Sekarang!</span>
+            <span class="w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center text-sm font-bold group-hover:scale-110 transition">🚀</span>
+          </div>
+        </div>
+
+        <!-- KAD 4: 🏆 PENCAPAIAN -->
+        <div onclick="bukaPencapaian()" class="group bg-white rounded-3xl p-6 border-4 border-purple-300 hover:border-yellow-400 transition-all duration-200 transform hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-2xl flex flex-col justify-between">
+          <div>
+            <div class="w-16 h-16 rounded-2xl bg-purple-100 group-hover:bg-purple-200 text-purple-700 flex items-center justify-center text-3xl mb-4 transition border-2 border-purple-300">
+              🏆
+            </div>
+            <span class="text-xs font-black uppercase text-purple-600 bg-purple-50 px-3 py-1 rounded-full border border-purple-200">Koleksi Lencana</span>
+            <h3 class="font-comic text-2xl font-bold text-slate-800 mt-2">PENCAPAIAN</h3>
+            <p class="text-slate-600 text-sm mt-1">
+              Lihat tahap kuasa, lencana elemen yang berjaya dibuka, serta rekod kecemerlangan anda.
+            </p>
+          </div>
+          <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-100">
+            <span class="text-purple-600 font-bold text-sm">Lihat Pingat & Trofi</span>
+            <span class="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm font-bold group-hover:translate-x-1 transition">➔</span>
+          </div>
+        </div>
+
+        <!-- KAD 5: ⭐ BINTANG SAYA -->
+        <div onclick="bukaBintangSaya()" class="group bg-white rounded-3xl p-6 border-4 border-yellow-400 hover:border-orange-500 transition-all duration-200 transform hover:-translate-y-2 cursor-pointer shadow-lg hover:shadow-2xl flex flex-col justify-between">
+          <div>
+            <div class="w-16 h-16 rounded-2xl bg-yellow-100 group-hover:bg-yellow-200 text-yellow-700 flex items-center justify-center text-3xl mb-4 transition border-2 border-yellow-400">
+              ⭐
+            </div>
+            <span class="text-xs font-black uppercase text-amber-700 bg-yellow-100 px-3 py-1 rounded-full border border-yellow-300">Ganjaran Kuasa</span>
+            <h3 class="font-comic text-2xl font-bold text-slate-800 mt-2">BINTANG SAYA</h3>
+            <p class="text-slate-600 text-sm mt-1">
+              Kumpul seberapa banyak bintang melalui kuiz dan buka kuasa elemen istimewa BoBoiBoy!
+            </p>
+          </div>
+          <div class="mt-6 flex items-center justify-between pt-4 border-t border-slate-100">
+            <span class="text-amber-600 font-bold text-sm">Semak Peti Kuasa</span>
+            <span class="w-8 h-8 rounded-full bg-yellow-500 text-white flex items-center justify-center text-sm font-bold group-hover:translate-x-1 transition">➔</span>
+          </div>
+        </div>
+
+        <!-- Superhero Motivator Box -->
+        <div class="bg-gradient-to-tr from-sky-500 to-indigo-600 rounded-3xl p-6 text-white border-4 border-sky-300 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-3xl">⚡</span>
+              <h4 class="font-comic text-xl font-bold">PESANAN BOBOIBOY:</h4>
+            </div>
+            <p class="text-sky-100 text-sm leading-relaxed">
+              “Matematik bukan susah kawan-kawan, ia hanya perlukan fokus, strategi dan latihan berterusan! Gunakan kuasa minda anda!”
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-white/20 flex items-center justify-between text-xs font-bold text-yellow-300">
+            <span>#KSSRMatematik</span>
+            <span>#Tahun4Hebat</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 3: NOTA PEMBELAJARAN (MODUL RUJUKAN) -->
+    <!-- ========================================== -->
+    <section id="viewNota" class="hidden space-y-6 transition-all duration-300">
+      <div class="flex items-center justify-between bg-white p-4 sm:p-6 rounded-3xl border-4 border-sky-300 shadow-md">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center text-2xl font-bold">
+            📚
+          </div>
+          <div>
+            <h2 class="font-comic text-2xl font-bold text-sky-950">NOTA PEMBELAJARAN MATEMATIK TAHUN 4</h2>
+            <p class="text-slate-500 text-xs sm:text-sm">Rujukan pantas formula & konsep penting KSSR Semakan</p>
+          </div>
+        </div>
+        <button onclick="kembaliKeDashboard()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-comic font-bold text-sm transition">
+          ⬅ Kembali
+        </button>
+      </div>
+
+      <!-- Notes Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Topik 1 -->
+        <div class="bg-white rounded-3xl p-5 border-3 border-sky-200 shadow hover:border-sky-400 transition">
+          <div class="flex items-center gap-2 mb-2 text-sky-700 font-comic font-bold text-lg">
+            <span>🔢 1. Nombor Bulat & Operasi (Hingga 100,000)</span>
+          </div>
+          <ul class="text-sm text-slate-600 space-y-1.5 list-disc list-inside">
+            <li><strong>Nilai Tempat:</strong> Sa, Puluh, Ratus, Ribu, Puluh Ribu.</li>
+            <li><strong>Nilai Digit:</strong> Contoh dalam nombor 74,520: nilai digit 7 ialah 70,000.</li>
+            <li><strong>Pembundaran:</strong> Lihat digit sebelah kanan. Jika 0-4 kekal, jika 5-9 tambah 1.</li>
+            <li><strong>Urutan Operasi:</strong> Selesaikan kurungan dahulu, kemudian darab/bahagi, akhir sekali tambah/tolak.</li>
+          </ul>
+        </div>
+
+        <!-- Topik 2 -->
+        <div class="bg-white rounded-3xl p-5 border-3 border-amber-200 shadow hover:border-amber-400 transition">
+          <div class="flex items-center gap-2 mb-2 text-amber-700 font-comic font-bold text-lg">
+            <span>🍰 2. Pecahan, Perpuluhan & Peratus</span>
+          </div>
+          <ul class="text-sm text-slate-600 space-y-1.5 list-disc list-inside">
+            <li><strong>Pecahan Wajar:</strong> Pengangka lebih kecil daripada penyebut (cth: 3/4).</li>
+            <li><strong>Pecahan Tak Wajar kepada Nombor Bercampur:</strong> Bahagikan pengangka dengan penyebut.</li>
+            <li><strong>Menambah Pecahan:</strong> Pastikan penyebut disamakan terlebih dahulu!</li>
+            <li><strong>Tukar Peratus:</strong> Darabkan dengan 100% (cth: 0.45 = 45%).</li>
+          </ul>
+        </div>
+
+        <!-- Topik 3 -->
+        <div class="bg-white rounded-3xl p-5 border-3 border-emerald-200 shadow hover:border-emerald-400 transition">
+          <div class="flex items-center gap-2 mb-2 text-emerald-700 font-comic font-bold text-lg">
+            <span>💵 3. Wang (Hingga RM100,000)</span>
+          </div>
+          <ul class="text-sm text-slate-600 space-y-1.5 list-disc list-inside">
+            <li><strong>Mata Wang:</strong> Ringgit Malaysia (RM) dan sen. Pastikan titik perpuluhan selari.</li>
+            <li><strong>Untung & Rugi:</strong> Untung = Harga Jual - Harga Kos. Rugi = Harga Kos - Harga Jual.</li>
+            <li><strong>Aset & Liabiliti:</strong> Aset adalah apa yang kita miliki; liabiliti adalah tanggungan hutang.</li>
+          </ul>
+        </div>
+
+        <!-- Topik 4 -->
+        <div class="bg-white rounded-3xl p-5 border-3 border-purple-200 shadow hover:border-purple-400 transition">
+          <div class="flex items-center gap-2 mb-2 text-purple-700 font-comic font-bold text-lg">
+            <span>⏰ 4. Masa, Ruang & Ukuran</span>
+          </div>
+          <ul class="text-sm text-slate-600 space-y-1.5 list-disc list-inside">
+            <li><strong>Sistem 24 Jam:</strong> Jam 1300 = 1:00 p.m. Tambah 12 jam untuk waktu petang/malam.</li>
+            <li><strong>Pertukaran Unit:</strong> 1 km = 1,000 m | 1 kg = 1,000 g | 1 ℓ = 1,000 mℓ.</li>
+            <li><strong>Perimeter:</strong> Jumlah ukuran keliling luar sesuatu rajah.</li>
+            <li><strong>Luas Segi Empat:</strong> Panjang × Lebar (Unit: cm² atau m²).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 4: LATIHAN INTERAKTIF SANTAI         -->
+    <!-- ========================================== -->
+    <section id="viewLatihan" class="hidden space-y-6 transition-all duration-300">
+      <div class="flex items-center justify-between bg-white p-4 sm:p-6 rounded-3xl border-4 border-emerald-300 shadow-md">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl font-bold">
+            📝
+          </div>
+          <div>
+            <h2 class="font-comic text-2xl font-bold text-emerald-950">MOD LATIHAN SUBJEKTIF</h2>
+            <p class="text-slate-500 text-xs sm:text-sm">Latih tubi berperingkat (Isi jawapan terus di ruang yang disediakan)</p>
+          </div>
+        </div>
+        <!-- BUTANG HOME -->
+        <button onclick="kembaliKeDashboard()" class="px-4 py-2 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-sky-950 font-comic font-black text-sm transition flex items-center gap-1.5 shadow-sm">
+          <span>🏠</span> Home
+        </button>
+      </div>
+
+      <!-- Practice Card -->
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border-4 border-emerald-200 shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+          <span class="bg-emerald-100 text-emerald-800 text-xs font-black px-3 py-1 rounded-full border border-emerald-300">
+            Latihan Minda Subjektif
+          </span>
+          <span id="latihanTopikText" class="text-xs text-slate-500 font-semibold">Topik: Nilai Nombor</span>
+        </div>
+
+        <h3 id="latihanSoalanText" class="font-comic text-xl sm:text-2xl font-bold text-slate-800 mb-6">
+          Soalan latihan akan dimuatkan...
+        </h3>
+
+        <!-- Ruang Taip Jawapan Subjektif -->
+        <div class="bg-emerald-50/70 p-5 rounded-2xl border-2 border-emerald-200 mb-6">
+          <label for="inputJawapanLatihan" class="block text-sm font-comic font-bold text-emerald-950 mb-2 flex items-center gap-2">
+            <span>✍️</span> Taip Jawapan Anda Di Sini:
+          </label>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <input 
+              type="text" 
+              id="inputJawapanLatihan" 
+              placeholder="Masukkan jawapan anda..." 
+              class="flex-1 px-5 py-3.5 text-lg font-comic font-bold bg-white border-2 border-emerald-400 rounded-2xl focus:outline-none focus:ring-4 focus:ring-emerald-200 text-slate-800"
+              onkeypress="if(event.key === 'Enter') semakJawapanLatihan()"
+            />
+            <button 
+              id="btnSemakLatihan"
+              type="button" 
+              onclick="semakJawapanLatihan()" 
+              class="px-6 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-comic font-bold text-base hero-btn-green transition flex items-center justify-center gap-2"
+            >
+              <span>⚡</span> Semak Jawapan
+            </button>
+          </div>
+          <p id="latihanHintGuide" class="text-xs text-slate-500 mt-2 font-medium">
+            💡 Panduan: Pastikan ejaan atau nombor ditaip dengan tepat.
+          </p>
+        </div>
+
+        <div id="latihanFeedback" class="hidden p-4 rounded-2xl mb-4 font-semibold text-sm"></div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-slate-100">
+          <button onclick="kembaliKeDashboard()" class="text-slate-600 hover:text-slate-800 font-comic font-bold text-sm flex items-center gap-1.5">
+            <span>🏠</span> Kembali Ke Dashboard
+          </button>
+          <button onclick="muatLatihanBaru()" class="px-6 py-3 rounded-2xl bg-sky-500 hover:bg-sky-600 text-white font-comic font-bold text-base hero-btn-blue transition">
+            Soalan Seterusnya ➔
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 5: MISI 20 SOALAN (SUBJEKTIF)         -->
+    <!-- ========================================== -->
+    <section id="viewMisi" class="hidden space-y-5 transition-all duration-300">
+      
+      <!-- Quiz Header / Status Bar -->
+      <div class="bg-white rounded-3xl p-4 sm:p-5 border-4 border-orange-300 shadow-md flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-orange-500 text-white flex items-center justify-center text-2xl font-black shadow">
+            🎯
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-comic text-xl font-bold text-slate-800">MISI 20 SOALAN SUBJEKTIF</span>
+              <span id="quizKelasBadge" class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-bold">4 MAJU</span>
+            </div>
+            <p class="text-xs text-slate-500 font-semibold">Calon Superhero: <span id="quizNamaDisplay" class="text-orange-600 font-bold">Murid</span></p>
+          </div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="flex items-center gap-3 min-w-[200px]">
+          <div class="w-full">
+            <div class="flex justify-between text-xs font-bold text-slate-600 mb-1">
+              <span>Kemajuan Misi</span>
+              <span id="quizProgressText">Soalan 1 / 20</span>
+            </div>
+            <div class="w-full bg-slate-200 h-3 rounded-full overflow-hidden">
+              <div id="quizProgressBar" class="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 h-full w-[5%] transition-all duration-300"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tombol Home & Berhenti -->
+        <div class="flex items-center gap-2">
+          <button onclick="kembaliKeDashboard()" title="Halaman Utama" class="px-3.5 py-1.5 rounded-xl text-xs font-comic font-black bg-yellow-400 hover:bg-yellow-500 text-sky-950 shadow-sm transition flex items-center gap-1">
+            <span>🏠</span> Home
+          </button>
+          <button onclick="sahkanBatalKuiz()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-600 border border-slate-300 transition">
+            Keluar Misi
+          </button>
+        </div>
+      </div>
+
+      <!-- Question Card (Bentuk Subjektif) -->
+      <div class="bg-white rounded-3xl p-6 sm:p-10 border-4 border-yellow-400 hero-shadow relative">
+        <div class="flex items-center justify-between mb-4">
+          <span id="quizTopicTag" class="bg-sky-100 text-sky-800 text-xs font-black px-3.5 py-1 rounded-full uppercase tracking-wider border border-sky-200">
+            Topik: Nombor Bulat
+          </span>
+          <span id="quizQuestionNumberBadge" class="font-comic text-sm font-extrabold text-orange-600 bg-orange-100 px-3 py-1 rounded-full border border-orange-200">
+            SOALAN 1 DARI 20
+          </span>
+        </div>
+
+        <h3 id="quizQuestionText" class="font-comic text-xl sm:text-2xl font-bold text-slate-900 leading-snug mb-6">
+          Soalan subjektif akan dimuatkan di sini...
+        </h3>
+
+        <!-- Ruang Input Jawapan Subjektif Murid -->
+        <div class="bg-amber-50/80 p-5 sm:p-6 rounded-3xl border-3 border-amber-300 mb-6 space-y-4">
+          <div>
+            <label for="quizInputJawapan" class="block font-comic text-base sm:text-lg font-bold text-amber-950 mb-2 flex items-center gap-2">
+              <span>✏️</span> Tulis Jawapan Anda:
+            </label>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <input 
+                type="text" 
+                id="quizInputJawapan" 
+                placeholder="Taipkan jawapan di sini..." 
+                class="flex-1 px-5 py-4 text-xl sm:text-2xl font-comic font-black bg-white border-2 border-amber-400 rounded-2xl focus:outline-none focus:ring-4 focus:ring-yellow-400/50 text-sky-950 placeholder-slate-400 shadow-inner"
+                autocomplete="off"
+                onkeypress="if(event.key === 'Enter') hantarJawapanKuiz()"
+              />
+              <button 
+                id="btnHantarJawapan" 
+                onclick="hantarJawapanKuiz()" 
+                class="py-4 px-8 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-comic text-lg sm:text-xl font-black hero-btn-orange transition flex items-center justify-center gap-2 shadow-md cursor-pointer"
+              >
+                <span>⚡</span> HANTAR JAWAPAN
+              </button>
+            </div>
+            <p id="quizPanduanTaip" class="text-xs text-amber-800 font-semibold mt-2">
+              💡 Tip: Tulis nombor sahaja atau ikut arahan soalan di atas.
+            </p>
+          </div>
+
+          <!-- Pad Kekunci Nombor Pantas (Mesra Tablet / Touchscreen) -->
+          <div class="pt-2 border-t border-amber-200">
+            <p class="text-xs font-bold text-slate-500 mb-2">Pad Simbol Pantas:</p>
+            <div class="flex flex-wrap gap-2">
+              <button type="button" onclick="tambahKarakter('0')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">0</button>
+              <button type="button" onclick="tambahKarakter('1')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">1</button>
+              <button type="button" onclick="tambahKarakter('2')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">2</button>
+              <button type="button" onclick="tambahKarakter('3')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">3</button>
+              <button type="button" onclick="tambahKarakter('4')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">4</button>
+              <button type="button" onclick="tambahKarakter('5')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">5</button>
+              <button type="button" onclick="tambahKarakter('6')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">6</button>
+              <button type="button" onclick="tambahKarakter('7')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">7</button>
+              <button type="button" onclick="tambahKarakter('8')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">8</button>
+              <button type="button" onclick="tambahKarakter('9')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">9</button>
+              <button type="button" onclick="tambahKarakter('.')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">.</button>
+              <button type="button" onclick="tambahKarakter('/')" class="w-10 h-10 bg-white hover:bg-amber-100 rounded-xl font-comic font-bold border border-amber-300 text-slate-800 shadow-sm text-base">/</button>
+              <button type="button" onclick="padamKarakterTerakhir()" class="px-3 h-10 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl font-comic font-bold border border-red-300 shadow-sm text-sm">⌫ Padam</button>
+              <button type="button" onclick="kosongkanInputKuiz()" class="px-3 h-10 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-comic font-bold border border-slate-300 shadow-sm text-sm">Kosongkan</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action / Instant Feedback Panel -->
+        <div id="quizFeedbackBox" class="hidden p-4 sm:p-5 rounded-2xl mb-4 font-bold text-sm sm:text-base flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div id="quizFeedbackContent" class="flex items-center gap-2">
+            <span>Jawapan anda direkodkan!</span>
+          </div>
+          <button id="btnNextQuestion" onclick="soalanSeterusnya()" class="px-6 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-comic font-bold text-base hero-btn-orange transition w-full sm:w-auto">
+            Seterusnya ➔
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 6: KEPUTUSAN AKHIR (MISI SELESAI)     -->
+    <!-- ========================================== -->
+    <section id="viewKeputusan" class="hidden max-w-2xl mx-auto w-full transition-all duration-300">
+      <div class="bg-white/95 backdrop-blur-md rounded-3xl p-6 sm:p-10 border-4 border-yellow-400 hero-shadow text-center relative overflow-hidden">
+        
+        <!-- Trophy & Stars Animation Header -->
+        <div class="flex justify-center -mt-16 mb-2">
+          <div class="w-28 h-28 bg-gradient-to-tr from-yellow-300 via-amber-400 to-orange-500 rounded-3xl p-1 shadow-2xl border-4 border-white flex items-center justify-center animate-bounce">
+            <span class="text-6xl" id="resultTrophyIcon">🏆</span>
+          </div>
+        </div>
+
+        <h2 class="font-comic text-3xl sm:text-4xl font-extrabold text-orange-600 tracking-wide mb-1">
+          🎉 MISI SELESAI! 🎉
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base font-semibold mb-6">
+          Tahniah atas usaha gigih anda menyelesaikan cabaran 20 soalan Matematik Tahun 4!
+        </p>
+
+        <!-- Official Report Card Box -->
+        <div class="bg-gradient-to-b from-sky-50 to-amber-50 rounded-2xl p-6 border-2 border-sky-200 text-left space-y-4 mb-6 shadow-inner">
+          
+          <div class="flex justify-between items-center py-2 border-b border-sky-200">
+            <span class="font-bold text-slate-600 text-sm sm:text-base">👤 Nama Murid:</span>
+            <span id="resNamaMurid" class="font-comic font-extrabold text-lg sm:text-xl text-sky-900">NAMA MURID</span>
+          </div>
+
+          <div class="flex justify-between items-center py-2 border-b border-sky-200">
+            <span class="font-bold text-slate-600 text-sm sm:text-base">🏫 Kelas:</span>
+            <span id="resKelasMurid" class="font-comic font-bold text-base sm:text-lg bg-yellow-400 text-sky-950 px-3 py-0.5 rounded-full shadow-sm">
+              4 MAJU
+            </span>
+          </div>
+
+          <div class="flex justify-between items-center py-2 border-b border-sky-200">
+            <span class="font-bold text-slate-600 text-sm sm:text-base">🎯 Markah:</span>
+            <span class="font-comic font-extrabold text-xl sm:text-2xl text-orange-600">
+              <span id="resMarkahScore">20</span> / 20
+            </span>
+          </div>
+
+          <div class="flex justify-between items-center py-2 border-b border-sky-200">
+            <span class="font-bold text-slate-600 text-sm sm:text-base">📊 Peratus:</span>
+            <span id="resPeratusScore" class="font-comic font-extrabold text-xl sm:text-2xl text-emerald-600">
+              100 %
+            </span>
+          </div>
+
+          <!-- Tahap Pencapaian -->
+          <div class="pt-2 text-center">
+            <span class="text-xs font-black uppercase tracking-wider text-slate-500 block mb-1">
+              ⭐ Tahap Pencapaian:
+            </span>
+            <div id="resTahapBadge" class="inline-block px-5 py-2.5 rounded-2xl font-comic text-xl sm:text-2xl font-black shadow-md border-2 border-white">
+              SUPERHERO MATEMATIK
+            </div>
+            <p id="resTahapUcapan" class="text-slate-600 text-xs sm:text-sm font-semibold mt-2">
+              Luar biasa! Anda telah menguasai kuasa matematik tertinggi!
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Star Visualizer -->
+        <div id="starsVisualContainer" class="flex justify-center items-center gap-2 text-3xl sm:text-4xl my-4">
+          ⭐ ⭐ ⭐ ⭐ ⭐
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+          <button onclick="mulaMisi20Soalan()" class="py-3.5 px-4 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-comic font-bold text-base hero-btn-orange transition">
+            🔄 Ulang Misi 20 Soalan
+          </button>
+          <button onclick="kembaliKeDashboard()" class="py-3.5 px-4 rounded-2xl bg-yellow-400 hover:bg-yellow-500 text-sky-950 font-comic font-black text-base hero-btn-yellow transition flex items-center justify-center gap-2">
+            <span>🏠</span> Kembali Ke Home
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- VIEW 7: PENCAPAIAN & BINTANG SAYA MODAL    -->
+    <!-- ========================================== -->
+    <div id="modalPencapaian" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border-4 border-yellow-400 hero-shadow relative">
+        <button onclick="tutupModalPencapaian()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-2xl font-bold">
+          ✕
+        </button>
+
+        <div class="text-center mb-6">
+          <div class="w-16 h-16 mx-auto bg-yellow-400 rounded-2xl flex items-center justify-center text-3xl shadow mb-2">
+            🏆
+          </div>
+          <h3 class="font-comic text-2xl font-bold text-slate-800" id="modalTitle">PENCAPAIAN SUPERHERO</h3>
+          <p class="text-xs text-slate-500" id="modalSubtitle">Status Kuasa Elemen & Lencana</p>
+        </div>
+
+        <div class="space-y-3 max-h-[60vh] overflow-y-auto pr-1" id="modalBodyContent">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-200">
+          <button onclick="tutupModalPencapaian()" class="w-full py-3 rounded-2xl bg-sky-600 text-white font-comic font-bold text-base hover:bg-sky-700 transition">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="w-full bg-white/90 backdrop-blur border-t-2 border-yellow-300 py-3 px-4 text-center text-xs font-semibold text-slate-600 z-20">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>🧮 Matriks Pembelajaran Matematik Tahun 4 • KSSR Semakan</p>
+      <p class="text-orange-600 font-bold">Tema Superhero Bersama BoBoiBoy</p>
+    </div>
+  </footer>
+
+  <!-- Notification Banner (Custom, no alerts) -->
+  <div id="toastMessage" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white px-6 py-3 rounded-2xl font-bold text-sm shadow-2xl z-50 transition border border-yellow-400 flex items-center gap-2">
+    <span id="toastIcon">⚡</span>
+    <span id="toastText">Mesej</span>
+  </div>
+
+  <script>
+    // State Data
+    const AppState = {
+      namaMurid: '',
+      kelas: '',
+      stars: 0,
+      soundEnabled: true,
+      lastScore: 0,
+      audioCtx: null,
+      currentQuestionIdx: 0,
+      quizAnswers: [],
+      practiceIdx: 0
+    };
+
+    // 20 SOALAN SUBJEKTIF MATEMATIK TAHUN 4 (KSSR SEMAKAN)
+    const SOALAN_TAHUN_4 = [
+      {
+        id: 1,
+        topik: "Nombor Hingga 100,000",
+        soalan: "Tuliskan nombor bagi 'Tiga puluh lima ribu empat ratus lapan' dalam bentuk angka.",
+        panduan: "Taip angka nombor tanpa koma, contoh: 35408",
+        jawapanTepat: ["35408", "35 408", "35,408"],
+        penerangan: "Tiga puluh lima ribu empat ratus lapan ditulis sebagai 35,408."
+      },
+      {
+        id: 2,
+        topik: "Nilai Digit",
+        soalan: "Apakah nilai digit bagi angka 7 dalam nombor 72,915?",
+        panduan: "Taip nilai digit penuh (cth: 70000)",
+        jawapanTepat: ["70000", "70,000", "70 000"],
+        penerangan: "Digit 7 berada pada nilai tempat puluh ribu, jadi nilainya ialah 70,000."
+      },
+      {
+        id: 3,
+        topik: "Pembundaran",
+        soalan: "Bundarkan nombor 64,872 kepada ribu yang terdekat.",
+        panduan: "Taip angka hasil pembundaran",
+        jawapanTepat: ["65000", "65,000", "65 000"],
+        penerangan: "Digit ratus ialah 8 (≥ 5), maka digit ribu 4 ditambah 1 menjadi 65,000."
+      },
+      {
+        id: 4,
+        topik: "Pola Nombor",
+        soalan: "Lengkapkan pola tertib menaik ini: 12,450, 12,500, 12,550, [ ... ]",
+        panduan: "Apakah nombor seterusnya?",
+        jawapanTepat: ["12600", "12,600", "12 600"],
+        penerangan: "Pola nombor bertambah 50 demi 50. 12,550 + 50 = 12,600."
+      },
+      {
+        id: 5,
+        topik: "Operasi Tambah",
+        soalan: "Hitungkan: 43,219 + 18,745 =",
+        panduan: "Taipkan jumlah jawapan",
+        jawapanTepat: ["61964", "61,964", "61 964"],
+        penerangan: "43,219 + 18,745 = 61,964."
+      },
+      {
+        id: 6,
+        topik: "Operasi Tolak",
+        soalan: "Cari beza antara 80,000 dan 27,465.",
+        panduan: "Taipkan baki tolak",
+        jawapanTepat: ["52535", "52,535", "52 535"],
+        penerangan: "80,000 - 27,465 = 52,535."
+      },
+      {
+        id: 7,
+        topik: "Operasi Darab",
+        soalan: "Hitungkan: 624 × 15 =",
+        panduan: "Taipkan hasil darab",
+        jawapanTepat: ["9360", "9,360", "9 360"],
+        penerangan: "624 × 15 = 9,360."
+      },
+      {
+        id: 8,
+        topik: "Operasi Bahagi",
+        soalan: "Selesaikan: 4,824 ÷ 8 =",
+        panduan: "Taipkan hasil bahagi",
+        jawapanTepat: ["603"],
+        penerangan: "4,824 ÷ 8 = 603 (pastikan digit sifar diletakkan pada rumah puluh)."
+      },
+      {
+        id: 9,
+        topik: "Operasi Bergabung",
+        soalan: "Kira nilai bagi: 350 + 120 × 4 =",
+        panduan: "Lakukan darab dahulu, kemudian tambah",
+        jawapanTepat: ["830"],
+        penerangan: "Darab dahulu: 120 × 4 = 480. Kemudian 350 + 480 = 830."
+      },
+      {
+        id: 10,
+        topik: "Pecahan Bentuk Termudah",
+        soalan: "Permudahkan pecahan 12/16 kepada bentuk termudah.",
+        panduan: "Tulis dalam bentuk pecahan pengangka/penyebut, contoh: 3/4",
+        jawapanTepat: ["3/4"],
+        penerangan: "Bahagikan 12 dan 16 dengan 4: 12÷4 = 3, 16÷4 = 4. Jawapan: 3/4."
+      },
+      {
+        id: 11,
+        topik: "Pecahan Tak Wajar",
+        soalan: "Tukarkan pecahan tak wajar 17/5 kepada nombor bercampur.",
+        panduan: "Contoh format jawapan: 3 2/5",
+        jawapanTepat: ["3 2/5", "3 2/5"],
+        penerangan: "17 ÷ 5 = 3 baki 2. Maka jawapannya ialah 3 2/5."
+      },
+      {
+        id: 12,
+        topik: "Tambah Pecahan",
+        soalan: "Cari hasil tambah bagi pecahan: 1/4 + 3/8 =",
+        panduan: "Samakan penyebut dahulu, beri jawapan termudah, cth: 5/8",
+        jawapanTepat: ["5/8"],
+        penerangan: "1/4 bersamaan 2/8. Maka 2/8 + 3/8 = 5/8."
+      },
+      {
+        id: 13,
+        topik: "Perpuluhan",
+        soalan: "Hitungkan: 4.85 + 12.392 =",
+        panduan: "Pastikan titik perpuluhan selari, cth: 17.242",
+        jawapanTepat: ["17.242"],
+        penerangan: "4.850 + 12.392 = 17.242."
+      },
+      {
+        id: 14,
+        topik: "Peratus",
+        soalan: "Tukarkan 3/10 kepada peratus.",
+        panduan: "Taip nombor atau bersama simbol %, contoh: 30 atau 30%",
+        jawapanTepat: ["30", "30%"],
+        penerangan: "3/10 × 100% = 30%."
+      },
+      {
+        id: 15,
+        topik: "Wang RM",
+        soalan: "RM4,250.60 + RM1,890.75 = RM [ ? ]",
+        panduan: "Taip nilai wang dengan titik sen (cth: 6141.35)",
+        jawapanTepat: ["6141.35", "6,141.35", "rm6141.35", "rm6,141.35"],
+        penerangan: "RM4,250.60 + RM1,890.75 = RM6,141.35."
+      },
+      {
+        id: 16,
+        topik: "Masa & Waktu",
+        soalan: "Tukarkan jam 1745 kepada sistem 12 jam.",
+        panduan: "Contoh format: 5:45 pm atau 5:45 petang",
+        jawapanTepat: ["5:45 pm", "5.45 pm", "5:45 p.m.", "5.45 p.m.", "5:45 petang", "5.45 petang"],
+        penerangan: "Jam 1745 ditolak 12 jam ialah 5:45 p.m."
+      },
+      {
+        id: 17,
+        topik: "Masa & Waktu",
+        soalan: "Berapakah jumlah hari dalam 4 minggu 3 hari?",
+        panduan: "Taipkan nombor bilangan hari (1 minggu = 7 hari)",
+        jawapanTepat: ["31", "31 hari"],
+        penerangan: "(4 minggu × 7 hari) + 3 hari = 28 + 3 = 31 hari."
+      },
+      {
+        id: 18,
+        topik: "Ukuran Panjang",
+        soalan: "Tukarkan 3 km 45 m kepada meter (m).",
+        panduan: "Taip angka nilai meter sahaja (1 km = 1,000 m)",
+        jawapanTepat: ["3045", "3,045", "3045 m", "3,045 m"],
+        penerangan: "3 km = 3,000 m. 3,000 m + 45 m = 3,045 m."
+      },
+      {
+        id: 19,
+        topik: "Ruang & Perimeter",
+        soalan: "Sebuah segi empat sama mempunyai sisi berukuran 7 cm. Berapakah perimeter bentuk itu dalam cm?",
+        panduan: "Taip angka perimeter sahaja",
+        jawapanTepat: ["28", "28 cm"],
+        penerangan: "Perimeter segi empat sama = 4 × 7 cm = 28 cm."
+      },
+      {
+        id: 20,
+        topik: "Ruang & Luas",
+        soalan: "Sebuah padang berbentuk segi empat tepat mempunyai panjang 12 m dan lebar 8 m. Berapakah luas padang itu dalam m²?",
+        panduan: "Panjang × Lebar. Taipkan nombor luas",
+        jawapanTepat: ["96", "96 m²", "96 m2"],
+        penerangan: "Luas = 12 m × 8 m = 96 m²."
+      }
+    ];
+
+    // Latihan santai subjektif
+    const LATIHAN_ITEMS = [
+      {
+        q: "Apakah nilai tempat bagi digit 8 dalam nombor 48,512?",
+        topik: "Nilai Tempat",
+        panduan: "Taip nilai tempat (cth: Sa, Puluh, Ratus, Ribu, atau Puluh Ribu)",
+        jawapanTepat: ["ribu"],
+        tips: "Digit 8 berada di tempat Ribu (8,000)."
+      },
+      {
+        q: "Hitungkan nilai bagi 2,500 × 10 =",
+        topik: "Operasi Darab",
+        panduan: "Taip nombor jawapan",
+        jawapanTepat: ["25000", "25,000", "25 000"],
+        tips: "Darab 10 hanya perlu menambah satu angka sifar (0) di belakang: 25,000."
+      },
+      {
+        q: "Tukarkan pecahan 1/2 kepada peratus (cth: 50 atau 50%).",
+        topik: "Peratus",
+        panduan: "Taip nombor atau nilai peratus",
+        jawapanTepat: ["50", "50%"],
+        tips: "Separuh (1/2) daripada 100% ialah 50%!"
+      },
+      {
+        q: "Cari hasil tolak: 1,000 - 340 =",
+        topik: "Operasi Tolak",
+        panduan: "Taipkan nombor baki",
+        jawapanTepat: ["660"],
+        tips: "1,000 - 340 = 660."
+      }
+    ];
+
+    // Helper untuk bersihkan input murid sebelum semakan
+    function normaliseInput(str) {
+      if (!str) return '';
+      return str.toString()
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, ' ')
+        .replace(/,/g, '');
+    }
+
+    function semakJawapanAdalahBetul(userJawapan, senaraiJawapanBetul) {
+      const uNorm = normaliseInput(userJawapan);
+      return senaraiJawapanBetul.some(ans => {
+        return normaliseInput(ans) === uNorm;
+      });
+    }
+
+    function getAudioContext() {
+      if (!AppState.audioCtx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        AppState.audioCtx = new AudioCtx();
+      }
+      if (AppState.audioCtx.state === 'suspended') {
+        AppState.audioCtx.resume();
+      }
+      return AppState.audioCtx;
+    }
+
+    function playTone(type) {
+      if (!AppState.soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        const now = ctx.currentTime;
+
+        if (type === 'click') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(580, now + 0.08);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
+          osc.start(now);
+          osc.stop(now + 0.08);
+        } else if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, now); // C5
+          osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+          osc.frequency.setValueAtTime(783.99, now + 0.16); // G5
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.35);
+          osc.start(now);
+          osc.stop(now + 0.35);
+        } else if (type === 'wrong') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(220, now);
+          osc.frequency.setValueAtTime(180, now + 0.15);
+          gain.gain.setValueAtTime(0.2, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'victory') {
+          const notes = [440, 554, 659, 880];
+          notes.forEach((freq, idx) => {
+            const o = ctx.createOscillator();
+            const g = ctx.createGain();
+            o.connect(g);
+            g.connect(ctx.destination);
+            o.frequency.setValueAtTime(freq, now + idx * 0.12);
+            g.gain.setValueAtTime(0.2, now + idx * 0.12);
+            g.gain.exponentialRampToValueAtTime(0.01, now + idx * 0.12 + 0.3);
+            o.start(now + idx * 0.12);
+            o.stop(now + idx * 0.12 + 0.3);
+          });
+        }
+      } catch (e) {
+        console.error("Audio error", e);
+      }
+    }
+
+    function toggleAudio() {
+      AppState.soundEnabled = !AppState.soundEnabled;
+      const icon = document.getElementById('soundIcon');
+      icon.textContent = AppState.soundEnabled ? '🔊' : '🔇';
+      showToast(AppState.soundEnabled ? 'Bunyi diaktifkan ⚡' : 'Bunyi disenyapkan 🔇');
+    }
+
+    function showToast(text, icon = '⚡') {
+      const toast = document.getElementById('toastMessage');
+      document.getElementById('toastIcon').textContent = icon;
+      document.getElementById('toastText').textContent = text;
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 3000);
+    }
+
+    function pilihKelas(namaKelas) {
+      playTone('click');
+      AppState.kelas = namaKelas;
+
+      const btnMaju = document.getElementById('btnKelasMaju');
+      const btnUsaha = document.getElementById('btnKelasUsaha');
+      const badgeMaju = document.getElementById('badgeMaju');
+      const badgeUsaha = document.getElementById('badgeUsaha');
+      const errorKelas = document.getElementById('errorKelas');
+
+      errorKelas.classList.add('hidden');
+
+      if (namaKelas === '4 MAJU') {
+        btnMaju.className = "group relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl font-comic text-xl font-bold border-4 border-blue-600 bg-blue-600 text-white shadow-xl scale-102 transition transform cursor-pointer ring-4 ring-blue-300";
+        badgeMaju.classList.remove('hidden');
+
+        btnUsaha.className = "group relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl font-comic text-xl font-bold border-4 border-emerald-400 bg-white text-emerald-800 hover:bg-emerald-50 transition transform hover:-translate-y-1 active:translate-y-0 cursor-pointer shadow-md";
+        badgeUsaha.classList.add('hidden');
+      } else if (namaKelas === '4 USAHA') {
+        btnUsaha.className = "group relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl font-comic text-xl font-bold border-4 border-emerald-600 bg-emerald-600 text-white shadow-xl scale-102 transition transform cursor-pointer ring-4 ring-emerald-300";
+        badgeUsaha.classList.remove('hidden');
+
+        btnMaju.className = "group relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl font-comic text-xl font-bold border-4 border-blue-400 bg-white text-blue-800 hover:bg-blue-50 transition transform hover:-translate-y-1 active:translate-y-0 cursor-pointer shadow-md";
+        badgeMaju.classList.add('hidden');
+      }
+    }
+
+    function handleMulaPembelajaran() {
+      const inputNama = document.getElementById('inputNamaMurid');
+      const nama = inputNama.value.trim();
+      const errorNama = document.getElementById('errorNama');
+      const errorKelas = document.getElementById('errorKelas');
+
+      let isValid = true;
+
+      if (!nama) {
+        errorNama.classList.remove('hidden');
+        inputNama.focus();
+        isValid = false;
+      } else {
+        errorNama.classList.add('hidden');
+      }
+
+      if (!AppState.kelas) {
+        errorKelas.classList.remove('hidden');
+        isValid = false;
+      } else {
+        errorKelas.classList.add('hidden');
+      }
+
+      if (!isValid) {
+        playTone('wrong');
+        return;
+      }
+
+      AppState.namaMurid = nama;
+      sessionStorage.setItem('matematik_namaMurid', AppState.namaMurid);
+      sessionStorage.setItem('matematik_kelas', AppState.kelas);
+
+      playTone('correct');
+
+      kemasKiniPaparanMurid();
+      tukarPaparan('viewDashboard');
+      showToast(`Selamat Datang Superhero ${AppState.namaMurid}! ⚡`, '🦸');
+    }
+
+    function kemasKiniPaparanMurid() {
+      document.getElementById('headerUserBadge').classList.remove('hidden');
+      document.getElementById('headerUserBadge').classList.add('flex');
+      document.getElementById('headerNamaDisplay').textContent = AppState.namaMurid;
+      document.getElementById('headerKelasDisplay').textContent = AppState.kelas;
+
+      document.getElementById('dashNamaGreeting').textContent = AppState.namaMurid.toUpperCase();
+      document.getElementById('dashNamaText').textContent = AppState.namaMurid;
+      document.getElementById('dashKelasBadge').textContent = AppState.kelas;
+      document.getElementById('dashBintangCounter').textContent = `${AppState.stars} ⭐`;
+
+      document.getElementById('quizNamaDisplay').textContent = AppState.namaMurid;
+      document.getElementById('quizKelasBadge').textContent = AppState.kelas;
+    }
+
+    function tukarPaparan(viewId) {
+      const views = ['viewLogin', 'viewDashboard', 'viewNota', 'viewLatihan', 'viewMisi', 'viewKeputusan'];
+      views.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          if (id === viewId) {
+            el.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+      });
+    }
+
+    // Fungsi Home utama
+    function kembaliKeDashboard() {
+      playTone('click');
+      tukarPaparan('viewDashboard');
+      kemasKiniPaparanMurid();
+      showToast('Kembali ke Dashboard Utama 🏠', '⚡');
+    }
+
+    function keluarSesi() {
+      if (AppState.namaMurid) {
+        sessionStorage.clear();
+        AppState.namaMurid = '';
+        AppState.kelas = '';
+        document.getElementById('inputNamaMurid').value = '';
+        
+        const btnMaju = document.getElementById('btnKelasMaju');
+        const btnUsaha = document.getElementById('btnKelasUsaha');
+        btnMaju.className = "group relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl font-comic text-xl font-bold border-4 border-blue-400 bg-white text-blue-800 hover:bg-blue-50 transition transform hover:-translate-y-1 active:translate-y-0 cursor-pointer shadow-md";
+        btnUsaha.className = "group relative flex items-center justify-center gap-3 p-4 sm:p-5 rounded-2xl font-comic text-xl font-bold border-4 border-emerald-400 bg-white text-emerald-800 hover:bg-emerald-50 transition transform hover:-translate-y-1 active:translate-y-0 cursor-pointer shadow-md";
+        document.getElementById('badgeMaju').classList.add('hidden');
+        document.getElementById('badgeUsaha').classList.add('hidden');
+        document.getElementById('headerUserBadge').classList.add('hidden');
+
+        tukarPaparan('viewLogin');
+        showToast('Sesi ditukar. Sila isi semula maklumat.', 'ℹ️');
+      }
+    }
+
+    function bukaNota() {
+      playTone('click');
+      tukarPaparan('viewNota');
+    }
+
+    function bukaLatihan() {
+      playTone('click');
+      AppState.practiceIdx = 0;
+      muatSoalanLatihan();
+      tukarPaparan('viewLatihan');
+    }
+
+    function muatSoalanLatihan() {
+      const item = LATIHAN_ITEMS[AppState.practiceIdx % LATIHAN_ITEMS.length];
+      document.getElementById('latihanTopikText').textContent = `Topik: ${item.topik}`;
+      document.getElementById('latihanSoalanText').textContent = item.q;
+      document.getElementById('latihanHintGuide').textContent = `💡 Panduan: ${item.panduan}`;
+
+      const input = document.getElementById('inputJawapanLatihan');
+      input.value = '';
+      input.disabled = false;
+      input.focus();
+
+      const btnSemak = document.getElementById('btnSemakLatihan');
+      btnSemak.disabled = false;
+
+      const feedback = document.getElementById('latihanFeedback');
+      feedback.classList.add('hidden');
+    }
+
+    function semakJawapanLatihan() {
+      const item = LATIHAN_ITEMS[AppState.practiceIdx % LATIHAN_ITEMS.length];
+      const input = document.getElementById('inputJawapanLatihan');
+      const val = input.value.trim();
+      const feedback = document.getElementById('latihanFeedback');
+
+      if (!val) {
+        showToast('Sila taip jawapan terlebih dahulu!', '⚠️');
+        input.focus();
+        return;
+      }
+
+      const isBetul = semakJawapanAdalahBetul(val, item.jawapanTepat);
+
+      input.disabled = true;
+      document.getElementById('btnSemakLatihan').disabled = true;
+
+      if (isBetul) {
+        playTone('correct');
+        feedback.className = "p-4 rounded-2xl mb-4 font-bold text-sm bg-emerald-100 text-emerald-900 border-2 border-emerald-300";
+        feedback.innerHTML = `🌟 TEPAT & HEBAT! Jawapan '${val}' adalah betul! <br><span class="text-xs font-normal">${item.tips}</span>`;
+        AppState.stars += 1;
+        document.getElementById('dashBintangCounter').textContent = `${AppState.stars} ⭐`;
+      } else {
+        playTone('wrong');
+        feedback.className = "p-4 rounded-2xl mb-4 font-bold text-sm bg-red-100 text-red-900 border-2 border-red-300";
+        feedback.innerHTML = `💡 Kurang Tepat! Jawapan sebenar ialah: <strong>${item.jawapanTepat[0]}</strong>.<br><span class="text-xs font-normal">Tip Kuasa: ${item.tips}</span>`;
+      }
+      feedback.classList.remove('hidden');
+    }
+
+    function muatLatihanBaru() {
+      playTone('click');
+      AppState.practiceIdx++;
+      muatSoalanLatihan();
+    }
+
+    function mulaMisi20Soalan() {
+      playTone('click');
+      AppState.currentQuestionIdx = 0;
+      AppState.quizAnswers = [];
+      tukarPaparan('viewMisi');
+      paparkanSoalanMisi();
+    }
+
+    function paparkanSoalanMisi() {
+      const qIndex = AppState.currentQuestionIdx;
+      const question = SOALAN_TAHUN_4[qIndex];
+
+      document.getElementById('quizTopicTag').textContent = `Topik: ${question.topik}`;
+      document.getElementById('quizQuestionNumberBadge').textContent = `SOALAN ${qIndex + 1} DARI 20`;
+      document.getElementById('quizProgressText').textContent = `Soalan ${qIndex + 1} / 20`;
+      
+      const pct = ((qIndex + 1) / 20) * 100;
+      document.getElementById('quizProgressBar').style.width = `${pct}%`;
+
+      document.getElementById('quizQuestionText').textContent = question.soalan;
+      document.getElementById('quizPanduanTaip').textContent = `💡 Panduan: ${question.panduan}`;
+
+      // Reset input box
+      const inputEl = document.getElementById('quizInputJawapan');
+      inputEl.value = '';
+      inputEl.disabled = false;
+      inputEl.focus();
+
+      document.getElementById('btnHantarJawapan').disabled = false;
+
+      // Reset feedback box
+      const fbBox = document.getElementById('quizFeedbackBox');
+      fbBox.classList.add('hidden');
+    }
+
+    // Input pad buttons helper
+    function tambahKarakter(ch) {
+      playTone('click');
+      const input = document.getElementById('quizInputJawapan');
+      if (!input.disabled) {
+        input.value += ch;
+        input.focus();
+      }
+    }
+
+    function padamKarakterTerakhir() {
+      playTone('click');
+      const input = document.getElementById('quizInputJawapan');
+      if (!input.disabled) {
+        input.value = input.value.slice(0, -1);
+        input.focus();
+      }
+    }
+
+    function kosongkanInputKuiz() {
+      playTone('click');
+      const input = document.getElementById('quizInputJawapan');
+      if (!input.disabled) {
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    function hantarJawapanKuiz() {
+      const qIndex = AppState.currentQuestionIdx;
+      const question = SOALAN_TAHUN_4[qIndex];
+      const inputEl = document.getElementById('quizInputJawapan');
+      const jawapanMurid = inputEl.value.trim();
+
+      if (!jawapanMurid) {
+        showToast('Sila taip jawapan anda terlebih dahulu!', '⚠️');
+        inputEl.focus();
+        return;
+      }
+
+      // Kunci input
+      inputEl.disabled = true;
+      document.getElementById('btnHantarJawapan').disabled = true;
+
+      const isBetul = semakJawapanAdalahBetul(jawapanMurid, question.jawapanTepat);
+
+      AppState.quizAnswers.push({
+        qIndex,
+        jawapanMurid,
+        isCorrect: isBetul
+      });
+
+      const fbBox = document.getElementById('quizFeedbackBox');
+      const fbContent = document.getElementById('quizFeedbackContent');
+      const btnNext = document.getElementById('btnNextQuestion');
+
+      if (isBetul) {
+        playTone('correct');
+        fbBox.className = "p-4 sm:p-5 rounded-2xl mb-4 font-bold text-sm sm:text-base flex flex-col sm:flex-row items-center justify-between gap-3 bg-emerald-100 text-emerald-950 border-2 border-emerald-400";
+        fbContent.innerHTML = `<span>⚡ TAHNAIH! Jawapan '${jawapanMurid}' adalah TEPAT! (+1 Bintang)</span>`;
+      } else {
+        playTone('wrong');
+        fbBox.className = "p-4 sm:p-5 rounded-2xl mb-4 font-bold text-sm sm:text-base flex flex-col sm:flex-row items-center justify-between gap-3 bg-red-100 text-red-950 border-2 border-red-400";
+        fbContent.innerHTML = `<span>💥 Jawapan tepat: <strong>${question.jawapanTepat[0]}</strong>. ${question.penerangan}</span>`;
+      }
+
+      if (qIndex === 19) {
+        btnNext.textContent = "Lihat Keputusan Penuh 🎉";
+      } else {
+        btnNext.textContent = "Soalan Seterusnya ➔";
+      }
+
+      fbBox.classList.remove('hidden');
+    }
+
+    function soalanSeterusnya() {
+      playTone('click');
+      if (AppState.currentQuestionIdx < 19) {
+        AppState.currentQuestionIdx++;
+        paparkanSoalanMisi();
+      } else {
+        selesaikanMisiDanPaparkanKeputusan();
+      }
+    }
+
+    function sahkanBatalKuiz() {
+      tukarPaparan('viewDashboard');
+      showToast('Kembali ke Dashboard Utama 🏠', 'ℹ️');
+    }
+
+    function selesaikanMisiDanPaparkanKeputusan() {
+      playTone('victory');
+      startConfetti();
+
+      const jumlahSoalan = 20;
+      const skorBetul = AppState.quizAnswers.filter(a => a.isCorrect).length;
+      const peratus = Math.round((skorBetul / jumlahSoalan) * 100);
+
+      AppState.lastScore = skorBetul;
+      AppState.stars += skorBetul;
+      document.getElementById('dashBintangCounter').textContent = `${AppState.stars} ⭐`;
+
+      document.getElementById('resNamaMurid').textContent = AppState.namaMurid;
+      document.getElementById('resKelasMurid').textContent = AppState.kelas;
+      document.getElementById('resMarkahScore').textContent = skorBetul;
+      document.getElementById('resPeratusScore').textContent = `${peratus} %`;
+
+      const badgeEl = document.getElementById('resTahapBadge');
+      const ucapanEl = document.getElementById('resTahapUcapan');
+      const trophyIcon = document.getElementById('resultTrophyIcon');
+      const starsContainer = document.getElementById('starsVisualContainer');
+
+      if (skorBetul >= 18) {
+        badgeEl.textContent = "SUPERHERO MATEMATIK";
+        badgeEl.className = "inline-block px-5 py-2.5 rounded-2xl font-comic text-xl sm:text-2xl font-black shadow-md border-2 border-white bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500 text-white animate-pulse";
+        ucapanEl.textContent = "Tahniah! Anda telah menguasai kuasa tertinggi Matematik BoBoiBoy!";
+        trophyIcon.textContent = "👑";
+        starsContainer.innerHTML = "⭐⭐⭐⭐⭐";
+      } else if (skorBetul >= 14) {
+        badgeEl.textContent = "HEBAT";
+        badgeEl.className = "inline-block px-5 py-2.5 rounded-2xl font-comic text-xl sm:text-2xl font-black shadow-md border-2 border-white bg-gradient-to-r from-sky-500 to-blue-600 text-white";
+        ucapanEl.textContent = "Hebat sekali! Kuasa Matematik anda sangat mantap dan tangkas!";
+        trophyIcon.textContent = "⚡";
+        starsContainer.innerHTML = "⭐⭐⭐⭐☆";
+      } else if (skorBetul >= 10) {
+        badgeEl.textContent = "BAGUS";
+        badgeEl.className = "inline-block px-5 py-2.5 rounded-2xl font-comic text-xl sm:text-2xl font-black shadow-md border-2 border-white bg-gradient-to-r from-emerald-500 to-teal-600 text-white";
+        ucapanEl.textContent = "Bagus! Teruskan usaha sedikit lagi untuk menguasai tahap tertinggi!";
+        trophyIcon.textContent = "🌟";
+        starsContainer.innerHTML = "⭐⭐⭐☆☆";
+      } else {
+        badgeEl.textContent = "TERUSKAN BERLATIH";
+        badgeEl.className = "inline-block px-5 py-2.5 rounded-2xl font-comic text-xl sm:text-2xl font-black shadow-md border-2 border-white bg-gradient-to-r from-orange-400 to-red-500 text-white";
+        ucapanEl.textContent = "Jangan putus asa! Superhero sejati sentiasa berlatih dan bangkit semula!";
+        trophyIcon.textContent = "💪";
+        starsContainer.innerHTML = "⭐⭐☆☆☆";
+      }
+
+      tukarPaparan('viewKeputusan');
+    }
+
+    function bukaPencapaian() {
+      playTone('click');
+      document.getElementById('modalTitle').textContent = "PENCAPAIAN ELEMEN";
+      document.getElementById('modalSubtitle').textContent = `Status Gelaran Calon: ${AppState.namaMurid} (${AppState.kelas})`;
+      
+      const content = document.getElementById('modalBodyContent');
+      content.innerHTML = `
+        <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 flex items-center gap-3">
+          <span class="text-3xl">⚡</span>
+          <div>
+            <h4 class="font-comic font-bold text-amber-900">Kuasa Kilat Subjektif</h4>
+            <p class="text-xs text-amber-700">Menaip nombor bulat dan mengira operasi asas dengan tepat.</p>
+          </div>
+          <span class="ml-auto text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full font-bold">Aktif</span>
+        </div>
+        <div class="p-3 bg-sky-50 rounded-2xl border border-sky-200 flex items-center gap-3">
+          <span class="text-3xl">🌪️</span>
+          <div>
+            <h4 class="font-comic font-bold text-sky-900">Kuasa Taufan Pecahan</h4>
+            <p class="text-xs text-sky-700">Menyatakan pecahan termudah dan nombor bercampur tanpa bantuan pilihan jawapan.</p>
+          </div>
+          <span class="ml-auto text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full font-bold">Aktif</span>
+        </div>
+        <div class="p-3 bg-orange-50 rounded-2xl border border-orange-200 flex items-center gap-3">
+          <span class="text-3xl">🔥</span>
+          <div>
+            <h4 class="font-comic font-bold text-orange-900">Kuasa Api Ukuran & Masa</h4>
+            <p class="text-xs text-orange-700">Mengira perimeter, luas padang dan sistem jam secara terus.</p>
+          </div>
+          <span class="ml-auto text-xs bg-emerald-500 text-white px-2 py-0.5 rounded-full font-bold">Aktif</span>
+        </div>
+      `;
+      document.getElementById('modalPencapaian').classList.remove('hidden');
+    }
+
+    function bukaBintangSaya() {
+      playTone('click');
+      document.getElementById('modalTitle').textContent = "⭐ BINTANG SAYA";
+      document.getElementById('modalSubtitle').textContent = `Jumlah Bintang Semasa: ${AppState.stars} Bintang`;
+
+      const content = document.getElementById('modalBodyContent');
+      content.innerHTML = `
+        <div class="text-center py-4 bg-yellow-50 rounded-2xl border-2 border-yellow-300">
+          <span class="text-5xl">⭐</span>
+          <h4 class="font-comic text-3xl font-extrabold text-amber-800 mt-2">${AppState.stars} BINTANG</h4>
+          <p class="text-xs text-amber-700 mt-1">Dihasilkan oleh kepintaran ${AppState.namaMurid}</p>
+        </div>
+        <div class="text-xs text-slate-600 bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+          <p><strong>Cara Menjana Lebih Bintang:</strong></p>
+          <p>• Selesaikan 20 soalan subjektif dalam Misi Kuasa.</p>
+          <p>• Buat latihan minda subjektif santai di menu Latihan.</p>
+        </div>
+      `;
+      document.getElementById('modalPencapaian').classList.remove('hidden');
+    }
+
+    function tutupModalPencapaian() {
+      playTone('click');
+      document.getElementById('modalPencapaian').classList.add('hidden');
+    }
+
+    function startConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      const ctx = canvas.getContext('2d');
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+
+      window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const stars = [];
+      const colors = ['#facc15', '#f97316', '#38bdf8', '#ef4444', '#10b981', '#ffffff'];
+
+      for (let i = 0; i < 70; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height - height,
+          size: Math.random() * 12 + 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          speedY: Math.random() * 4 + 2,
+          speedX: Math.random() * 2 - 1,
+          rot: Math.random() * Math.PI,
+          rotSpeed: (Math.random() - 0.5) * 0.1
+        });
+      }
+
+      let animationFrames = 180;
+
+      function drawStar(cx, cy, spikes, outerRadius, innerRadius, color, rot) {
+        let rotStep = Math.PI / spikes;
+        let x = cx;
+        let y = cy;
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        ctx.moveTo(0, 0 - outerRadius);
+        for (let i = 0; i < spikes; i++) {
+          x = Math.sin(i * 2 * rotStep) * outerRadius;
+          y = -Math.cos(i * 2 * rotStep) * outerRadius;
+          ctx.lineTo(x, y);
+          x = Math.sin((i * 2 + 1) * rotStep) * innerRadius;
+          y = -Math.cos((i * 2 + 1) * rotStep) * innerRadius;
+          ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+
+        stars.forEach(s => {
+          s.y += s.speedY;
+          s.x += s.speedX;
+          s.rot += s.rotSpeed;
+
+          drawStar(s.x, s.y, 5, s.size, s.size / 2, s.color, s.rot);
+
+          if (s.y > height) {
+            s.y = -20;
+            s.x = Math.random() * width;
+          }
+        });
+
+        animationFrames--;
+        if (animationFrames > 0) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, width, height);
+        }
+      }
+
+      animate();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedNama = sessionStorage.getItem('matematik_namaMurid');
+      const savedKelas = sessionStorage.getItem('matematik_kelas');
+
+      if (savedNama && savedKelas) {
+        AppState.namaMurid = savedNama;
+        AppState.kelas = savedKelas;
+        document.getElementById('inputNamaMurid').value = savedNama;
+        pilihKelas(savedKelas);
+        kemasKiniPaparanMurid();
+        tukarPaparan('viewDashboard');
+      } else {
+        tukarPaparan('viewLogin');
+      }
+    });
+  </script>
+</body>
+</html>
